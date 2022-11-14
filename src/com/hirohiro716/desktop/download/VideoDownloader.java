@@ -27,6 +27,7 @@ import com.hirohiro716.gui.dialog.InstantMessage;
 import com.hirohiro716.gui.dialog.ProcessAfterDialogClosing;
 import com.hirohiro716.gui.dialog.TextAreaDialog;
 import com.hirohiro716.gui.event.EventHandler;
+import com.hirohiro716.gui.event.FrameEvent;
 import com.hirohiro716.gui.event.MouseEvent;
 import com.hirohiro716.gui.event.MouseEvent.MouseButton;
 
@@ -128,7 +129,7 @@ public class VideoDownloader {
      * 
      * @param url 
      */
-    private static void downloadNextUrl(String url) {
+    private static void downloadFromUrl(String url) {
         Thread thread = new Thread(new Runnable() {
             
             @Override
@@ -214,6 +215,16 @@ public class VideoDownloader {
         VideoDownloader.window.setTitle("Youtube-DL-GUI");
         VideoDownloader.window.setSize(700, 600);
         VideoDownloader.window.setResizable(false);
+        VideoDownloader.window.addClosingEventHandler(new EventHandler<FrameEvent>() {
+
+            @Override
+            protected void handle(FrameEvent event) {
+                VideoDownloader.window.setClosable(true);
+                if (VideoDownloader.runningUrls.size() > 0) {
+                    VideoDownloader.window.setClosable(false);
+                }
+            }
+        });
         // Vertical pane
         VerticalPane pane = new VerticalPane();
         pane.setFillChildToPaneWidth(true);
@@ -232,7 +243,7 @@ public class VideoDownloader {
         pane.getChildren().add(scrollPane);
         pane.getGrowableControls().add(scrollPane);
         // Pane of progress
-        VideoDownloader.paneOfProgress.setWidth(640);
+        VideoDownloader.paneOfProgress.setMaximumWidth(640);
         VideoDownloader.paneOfProgress.setPadding(10);
         VideoDownloader.paneOfProgress.setFillChildToPaneWidth(true);
         VideoDownloader.paneOfProgress.setBackgroundColor(null);
@@ -295,7 +306,7 @@ public class VideoDownloader {
                             VideoDownloader.createControlsOfProgress(url);
                         }
                         for (String url : urls) {
-                            VideoDownloader.downloadNextUrl(url);
+                            VideoDownloader.downloadFromUrl(url);
                         }
                     }
                 });
