@@ -134,10 +134,14 @@ public class VideoDownloader {
             
             @Override
             public void run() {
-                while (runningUrls.size() >= 3) {
+                boolean isPause = true;
+                while (isPause) {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException exception) {
+                    }
+                    synchronized (VideoDownloader.runningUrls) {
+                        isPause = runningUrls.size() >= 3;
                     }
                 }
                 synchronized (VideoDownloader.runningUrls) {
@@ -177,9 +181,6 @@ public class VideoDownloader {
                         }
                     }
                     process.waitFor();
-                    synchronized (VideoDownloader.runningUrls) {
-                        VideoDownloader.runningUrls.remove(url);
-                    }
                     for (Integer progress : VideoDownloader.progresses.values()) {
                         if (progress < 100) {
                             return;
@@ -188,6 +189,10 @@ public class VideoDownloader {
                     InstantMessage.show("ダウンロードが完了しました。", 5000, VideoDownloader.window);
                 } catch (IOException | InterruptedException exception) {
                     exception.printStackTrace();
+                } finally {
+                    synchronized (VideoDownloader.runningUrls) {
+                        VideoDownloader.runningUrls.remove(url);
+                    }
                 }
             }
         });
@@ -214,7 +219,7 @@ public class VideoDownloader {
         VideoDownloader.window = new Window();
         VideoDownloader.window.setTitle("Youtube-DL-GUI");
         VideoDownloader.window.setSize(700, 600);
-        VideoDownloader.window.setResizable(false);
+//        VideoDownloader.window.setResizable(false);
         VideoDownloader.window.addClosingEventHandler(new EventHandler<FrameEvent>() {
 
             @Override
@@ -281,6 +286,9 @@ public class VideoDownloader {
 
             @Override
             protected void handle(MouseEvent event) {
+                if (VideoDownloader.runningUrls.size() > 0) {
+                    return;
+                }
                 TextAreaDialog dialog = new TextAreaDialog(window);
                 dialog.setTitle("URLの入力");
                 dialog.setMessage("ダウンロードするURLを入力してダウンロードを開始してください。");
