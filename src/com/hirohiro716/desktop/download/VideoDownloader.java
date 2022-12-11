@@ -114,6 +114,7 @@ public class VideoDownloader {
                 text.append(progress);
                 text.append("%");
                 labelOfProgress.setText(text.toString());
+                labelOfProgress.updateDisplay();
                 VideoDownloader.progresses.put(url, progress);
                 return;
             }
@@ -219,7 +220,6 @@ public class VideoDownloader {
         VideoDownloader.window = new Window();
         VideoDownloader.window.setTitle("Youtube-DL-GUI");
         VideoDownloader.window.setSize(700, 600);
-//        VideoDownloader.window.setResizable(false);
         VideoDownloader.window.addClosingEventHandler(new EventHandler<FrameEvent>() {
 
             @Override
