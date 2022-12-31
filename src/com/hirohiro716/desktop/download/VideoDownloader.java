@@ -104,21 +104,21 @@ public class VideoDownloader {
             labelOfTitle.setText(lineObject.toString());
             return;
         }
+        Label labelOfProgress = verticalPane.getChildren().findLabelByName("progress");
         if (lineObject.toString().indexOf("[download]  ") == 0 || lineObject.toString().indexOf("[download] 1") == 0) {
             lineObject.extract("[0-9\\.]{1,}%").replace("%", "");
             Integer progress = lineObject.toInteger();
             if (progress != null) {
-                Label labelOfProgress = verticalPane.getChildren().findLabelByName("progress");
                 StringObject text = StringObject.repeat("|", progress);
                 text.append(" ");
                 text.append(progress);
                 text.append("%");
                 labelOfProgress.setText(text.toString());
-                labelOfProgress.updateDisplay();
                 VideoDownloader.progresses.put(url, progress);
                 return;
             }
         }
+        labelOfProgress.updateDisplay();
     }
     
     private static List<String> runningUrls = new ArrayList<>();
