@@ -159,7 +159,7 @@ public class VideoDownloader {
                     arguments.add("-f");
                     arguments.add("b");
                     arguments.add("-o");
-                    arguments.add(downloadLocation + "%(title)s.%(ext)s");
+                    arguments.add(VideoDownloader.downloadLocation + "%(title)s.%(ext)s");
                     arguments.add(url);
                     Process process = Runtime.getRuntime().exec(arguments.toArray(new String[] {}));
                     InputStream inputStream = process.getInputStream();
