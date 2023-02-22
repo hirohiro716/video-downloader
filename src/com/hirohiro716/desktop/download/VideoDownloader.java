@@ -18,6 +18,7 @@ import com.hirohiro716.gui.GUI;
 import com.hirohiro716.gui.Window;
 import com.hirohiro716.gui.control.Button;
 import com.hirohiro716.gui.control.ContextMenu;
+import com.hirohiro716.gui.control.Control;
 import com.hirohiro716.gui.control.HorizontalPane;
 import com.hirohiro716.gui.control.Label;
 import com.hirohiro716.gui.control.ScrollPane;
@@ -228,6 +229,18 @@ public class VideoDownloader {
                 VideoDownloader.window.setClosable(true);
                 if (VideoDownloader.runningUrls.size() > 0) {
                     VideoDownloader.window.setClosable(false);
+                }
+            }
+        });
+        VideoDownloader.window.addActivatedEventHandler(new EventHandler<FrameEvent>() {
+
+            @Override
+            protected void handle(FrameEvent event) {
+                for (Control control : VideoDownloader.paneOfProgress.getChildren()) {
+                    VerticalPane verticalPane = (VerticalPane) control;
+                    verticalPane.updateLayout();
+                    Label label = verticalPane.getChildren().findLabelByName("progress");
+                    label.updateDisplay();
                 }
             }
         });
