@@ -118,6 +118,7 @@ public class VideoDownloader {
                 return;
             }
         }
+        labelOfProgress.getParent().updateLayout();
         labelOfProgress.updateDisplay();
     }
     
